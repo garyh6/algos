@@ -2,7 +2,6 @@
 // -1 is bomb
 
 const createMineSweeper = (width, height, mines) => {
-
     if(!height || ! width) return []
     if(mines >= width*height) {
         return createGrid(Infinity)
@@ -16,24 +15,48 @@ const createMineSweeper = (width, height, mines) => {
         return grid
     }
 
-    const getBombCoordinates = () => {
-        x = Math.floor(Math.random() * width)
-        y = Math.floor(Math.random() * height)
-        return {x, y}
+    const createCoordinatesList = () => {
+        const list = []
+
+        for (let i=0; i<height; i++) {
+            for (let j=0; j<width; j++) {
+                list.push({y: i, x: j})
+            }
+        }
+
+        return list
+    }
+
+    const shuffle = (arr) => {
+        let end = arr.length
+        let temp, idx
+
+        while(end) {
+            idx = Math.floor(Math.random() * end)
+            end--
+
+            temp = arr[idx]
+            arr[idx] = arr[end]
+            arr[end] = temp
+        }
+
+        return arr
     }
 
     const grid = createGrid(0)
 
-    // this is a problem, would be better to y*n + x = num
-    // from a list of num, shuffle and slice first z numbers
-    let count = 0
-    while (count < mines) {
-        let {x, y} = getBombCoordinates()
-        if(grid[y][x] === 0) {
-            grid[y][x] = -1
-            count++
-        }
+    let coordinates = createCoordinatesList()
+    coordinates = shuffle(coordinates)
+    coordinates = coordinates.slice(0,mines)
+
+    console.log('coordinates', coordinates)
+
+    for(let i=0; i<coordinates.length; i++) {
+        const {x, y} = coordinates[i]
+        grid[y][x] = -1
     }
+
+    console.log('grid', grid)
 
     for(let i=0; i<height; i++) {
         for(let j=0; j<width; j++) {
