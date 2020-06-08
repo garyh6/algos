@@ -95,5 +95,5 @@ const createMineSweeper = (width, height, mines) => {
     return grid
 }
 
-const grid = createMineSweeper(3, 3, 4)
+const grid = createMineSweeper(5, 5, 24)
 console.log('grid', grid)
