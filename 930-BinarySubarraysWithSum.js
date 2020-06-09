@@ -28,27 +28,30 @@
 //     return total
 // };
 
+/**
+ * @param {number[]} A
+ * @param {number} S
+ * @return {number}
+ */
 var numSubarraysWithSum = function(A, S) {
-    if(A.length === 0 || S === null) return 0
-    let prefix = {}
-    let count = 0
+    if(A.length === 0 || S == null) return 0
+    const seen = {}
     let sum = 0
-    for(let i=0; i<A.length; i++) {
+    let count = 0
+    for (let i=0; i< A.length; i++) {
         sum += A[i]
-        if(sum - S === 0 && S != 0) {
-            if(prefix[0]) count += 1+prefix[0]
-            else count++
+        if(sum === S) {
+            count++
+            count += seen[0] ? seen[0] : 0
         }
-        else if (prefix[sum-S]) count += prefix[sum-S]
-        else if (S === 0 && sum === 0 && !prefix[0]) {
-            prefix[0] = 1
-            count += prefix[0]
+        else {
+            let dif = sum-S
+            count += seen[dif] ? seen[dif] : 0
         }
         
-        if(prefix[sum]) prefix[sum]++
-        else prefix[sum] = 1
-
+        if(!seen[sum]) seen[sum] = 1
+        else seen[sum]++
+        
     }
-    
     return count
 };
