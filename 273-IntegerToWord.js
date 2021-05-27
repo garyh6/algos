@@ -2,7 +2,7 @@
  * @param {number} num
  * @return {string}
  */
-var numberToWords = function(num) {
+ var numberToWords = function(num) {
     if(num === 0) return 'Zero'
     
     const obj = {
@@ -36,6 +36,7 @@ var numberToWords = function(num) {
     }
     
     const obj2 = {
+        0: '',
         3: 'Hundred',
         4: 'Thousand',
         7: 'Million',
@@ -52,25 +53,22 @@ var numberToWords = function(num) {
         for(let i = lengthOfNum; i > 0; i--) {
             if(n == 0) break
             if(i === 3) {
-                res += `${obj[Math.floor(n/100)]} `
+                res += obj[Math.floor(n/100)] + ' '
                 res += 'Hundred '
                 n = n % 100
             } else if(i === 2) {
-                // if one digit
-                
-                // if teens
                 let tensNumber = Math.floor(n/10)
                 if (n < 10) {
                     continue
                 } else if(tensNumber == 1) {
-                    res += `${obj[n]} `
+                    res += obj[n] + ' '
                     i = 0
                 } else {
-                    res += `${obj[n - n % 10]} `
+                    res += obj[n - n % 10] + ' '
                     n = n % 10
                 }
             } else if(i === 1) {
-                if(n != 0) res += `${obj[n]} `
+                if(n != 0) res += obj[n] + ' '
             } else {
                 throw new Error('hundredWord fn 2')
             }
@@ -87,41 +85,39 @@ var numberToWords = function(num) {
     
     let i = lengthOfNum
         
+    let threeDigitNum, obj2Idx
     while(i > 0) {
         if(num == 0) break
         if(i >= 10) {
             // 1,234,567,891
-            let threeDigitNum = Math.floor(num / 1000000000)
-            if (threeDigitNum != 0) {
-                res += hundredWord(threeDigitNum)
-                res += obj2[10] + ' '
-            }
-            num = num % 1000000000
+            threeDigitNum = Math.floor(num / Math.pow(10,9))
+            obj2Idx = 10
+            num = num % Math.pow(10,9)
             i = 7
         } else if (i >= 7) {
             // 234,567,891
-            let threeDigitNum = Math.floor(num / 1000000)
-            if (threeDigitNum != 0) {
-                res += hundredWord(threeDigitNum)
-                res += obj2[7] + ' '
-            }
-            num = num % 1000000
+            threeDigitNum = Math.floor(num / Math.pow(10,6))
+            obj2Idx = 7
+            num = num % Math.pow(10,6)
             i = 4
         } else if (i >= 4) {
             // 567,891
-            let threeDigitNum = Math.floor(num / 1000)
-            if (threeDigitNum != 0) {
-                res += hundredWord(threeDigitNum)
-                res += obj2[4] + ' '
-            }
-            num = num % 1000
+            threeDigitNum = Math.floor(num / Math.pow(10,3))
+            obj2Idx = 4
+            num = num % Math.pow(10,3)
             i = 1
         } else if (i >= 1) {
             // 891
-            res += `${hundredWord(num)}`
+            threeDigitNum = num
+            obj2Idx = 0
             i = 0
         } else {
             throw new Error('while loop')
+        }
+        
+        if (threeDigitNum != 0) {
+            res += hundredWord(threeDigitNum)
+            res += obj2Idx == 0 ? '' : obj2[obj2Idx] + ' '
         }
     }
         
